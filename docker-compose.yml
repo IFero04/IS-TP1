@@ -15,15 +15,20 @@ services:
       - "./src/rpc-server:/app"
     depends_on:
       - db
+    environment:
+      - USE_DEV_MODE=true
 
   rpc-client:
     container_name: is-rpc-client
     build: docker/images/python
+    stdin_open: true
     volumes:
       - "./src/rpc-client:/app"
       - "./docker/volumes/data:/data"
     depends_on:
       - rpc-server
+    environment:
+      - USE_DEV_MODE=$USE_DEV_MODE
 
   sample-db-access:
     container_name: is-db-access

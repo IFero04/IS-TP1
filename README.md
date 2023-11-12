@@ -67,6 +67,5 @@ Follow the steps below to establish a conducive working environment:
     ```
     docker-compose run --entrypoint "nodemon main.py" rpc-server 
     ```
-
 ___
 #### _Informatics Engineering @ipvc/estg, 2023-2024_ ####
