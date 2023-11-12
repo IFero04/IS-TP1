@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-import Player
+from entities.season import Season
 
 
 class Team:
@@ -9,21 +9,21 @@ class Team:
         Team.counter += 1
         self._id = Team.counter
         self._abbreviation = abbreviation
-        self._players = []
+        self._seasons = []
 
-    def add_player(self, player: Player):
-        self._players.append(player)
+    def add_season(self, season: Season):
+        self._seasons.append(season)
 
     def to_xml(self):
         el = ET.Element("Team")
         el.set("id", str(self._id))
         el.set("abbreviation", self._abbreviation)
 
-        players_el = ET.Element("Players")
-        for player in self._players:
-            players_el.append(player.to_xml())
+        season_el = ET.Element("Players")
+        for season in self._seasons:
+            season_el.append(season.to_xml())
 
-        el.append(players_el)
+        el.append(season_el)
 
         return el
 
