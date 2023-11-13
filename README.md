@@ -67,5 +67,7 @@ Follow the steps below to establish a conducive working environment:
     ```
     docker-compose run --entrypoint "nodemon main.py" rpc-server 
     ```
+    
+docker-compose up -d rpc-client ; docker attach is-rpc-client
 ___
 #### _Informatics Engineering @ipvc/estg, 2023-2024_ ####

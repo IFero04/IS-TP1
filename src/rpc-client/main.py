@@ -8,6 +8,10 @@ response = server.ping('Ping')
 if response != 'Pong':
     raise ValueError("Unexpected response from server: " + response)
 
-op = menu()
+op = 'not 0'
 
-print(op)
+while op != '0':
+    op = menu()
+    print(op)
+
+

@@ -1,6 +1,7 @@
 options = {
     '1': 'Opção 1',
-    '2': 'Opção 2'
+    '2': 'Opção 2',
+    '0': 'Sair'
 }
 
 
@@ -11,7 +12,6 @@ def menu():
         for key, value in options.items():
             print(f'{key}) {value}')
 
-        option = input('Option: ')
-        #option = '1'
+        option = input('Option: ').strip()
 
     return option
