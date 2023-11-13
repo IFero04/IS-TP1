@@ -1,8 +1,5 @@
 import xml.etree.ElementTree as ET
 
-from entities.college import College
-from entities.country import Country
-
 
 class Player:
 

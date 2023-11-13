@@ -1,11 +1,11 @@
 import xml.etree.ElementTree as ET
+from entities.functions.str_to_ascii import str_to_ascii
 
 
 class Team:
 
     def __init__(self, abbreviation: str):
-        Team.counter += 1
-        self._id = Team.counter
+        self._id = str_to_ascii(abbreviation)
         self._abbreviation = abbreviation
 
     def to_xml(self):
@@ -20,6 +20,3 @@ class Team:
 
     def __str__(self):
         return f"{self._abbreviation} ({self._id})"
-
-
-Team.counter = 0

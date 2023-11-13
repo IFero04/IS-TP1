@@ -38,8 +38,8 @@ class Season:
         el.set("usg_pct", self._usg_pct)
         el.set("ts_pct", self._ts_pct)
         el.set("ast_pct", self._ast_pct)
-        el.set("player", self._player)
-        el.set("team", self._team)
+        el.set("player_ref", str(self._player.get_id()))
+        el.set("team_ref", str(self._team.get_id()))
         return el
 
     def get_id(self):
