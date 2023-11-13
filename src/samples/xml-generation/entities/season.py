@@ -6,10 +6,11 @@ import entities.team
 
 class Season:
 
-    def __init__(self, season, gp, pts, reb, ast, net_rating, oreb_pct, dreb_pct, usg_pct, ts_pct, ast_pct):
+    def __init__(self, season_year, gp, pts, reb, ast, net_rating, oreb_pct
+                 , dreb_pct, usg_pct, ts_pct, ast_pct, player, team):
         Season.counter += 1
         self._id = Season.counter
-        self._season = season
+        self._season_year = season_year
         self._gp = gp
         self._pts = pts
         self._reb = reb
@@ -20,19 +21,13 @@ class Season:
         self._usg_pct = usg_pct
         self._ts_pct = ts_pct
         self._ast_pct = ast_pct
-        self._players = []
-        self._teams = []
-
-    def add_player(self, player: Player):
-        self._players.append(player)
-
-    def add_team(self, team: Team):
-        self._teams.append(team)
+        self._player = player
+        self._team = team
 
     def to_xml(self):
         el = ET.Element("Season")
         el.set("id", str(self._id))
-        el.set("season", self._season)
+        el.set("season_year", self._season_year)
         el.set("gp", self._gp)
         el.set("pts", self._pts)
         el.set("reb", self._reb)
@@ -43,27 +38,15 @@ class Season:
         el.set("usg_pct", self._usg_pct)
         el.set("ts_pct", self._ts_pct)
         el.set("ast_pct", self._ast_pct)
-
-        players_el = ET.Element("players")
-        for player in self._players:
-            player_el = ET.Element("player_ref")
-            player_el.set("id", str(player.get_id()))
-            players_el.append(player_el)
-
-        el.append(players_el)
-
-        teams_el = ET.Element('teams')
-        for team in self._teams:
-            team_el = ET.Element("team_ref")
-            team_el.set("id", str(team.get_id()))
-            teams_el.append(team_el)
-
-        el.append(teams_el)
-
+        el.set("player", self._player)
+        el.set("team", self._team)
         return el
 
+    def get_id(self):
+        return self._id
+
     def __str__(self):
-        return f"{self._season} ({self._id}"
+        return f"{self._season_year} ({self._id}"
 
 
 Season.counter = 0

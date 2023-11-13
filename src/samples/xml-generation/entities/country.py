@@ -12,6 +12,7 @@ class Country:
         el = ET.Element("Country")
         el.set("id", str(self._id))
         el.set("name", self._name)
+
         return el
 
     def get_id(self):

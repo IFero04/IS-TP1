@@ -12,6 +12,7 @@ class College:
         el = ET.Element("College")
         el.set("id", str(self._id))
         el.set("name", self._name)
+
         return el
 
     def get_id(self):
