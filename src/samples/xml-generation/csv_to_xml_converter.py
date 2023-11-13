@@ -16,6 +16,12 @@ class CSVtoXMLConverter:
         self._reader = CSVReader(path)
 
     def to_xml(self):
+        # read college
+        colleges = self._reader.read_entities(
+            attr="college",
+            builder=lambda row: College(row["college"])
+        )
+
         # read countries
         countries = self._reader.read_entities(
             attr="country",
@@ -26,12 +32,6 @@ class CSVtoXMLConverter:
         teams = self._reader.read_entities(
             attr="team_abbreviation",
             builder=lambda row: Team(row["team_abbreviation"])
-        )
-
-        # read college
-        colleges = self._reader.read_entities(
-            attr="college",
-            builder=lambda row: College(row["college"])
         )
 
         # read players

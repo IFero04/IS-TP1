@@ -9,11 +9,12 @@ class Country:
         self._name = name
 
     def to_xml(self):
-        el = ET.Element("Country")
-        el.set("id", str(self._id))
-        el.set("name", self._name)
+        country_element = ET.Element("Country")
+        country_element.set("id", str(self._id))
 
-        return el
+        ET.SubElement(country_element, "Name").text = self._name
+
+        return country_element
 
     def get_id(self):
         return self._id

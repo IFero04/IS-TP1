@@ -9,11 +9,12 @@ class College:
         self._name = name
 
     def to_xml(self):
-        el = ET.Element("College")
-        el.set("id", str(self._id))
-        el.set("name", self._name)
+        college_element = ET.Element("College")
+        college_element.set("id", str(self._id))
 
-        return el
+        ET.SubElement(college_element, "Name").text = self._name
+
+        return college_element
 
     def get_id(self):
         return self._id

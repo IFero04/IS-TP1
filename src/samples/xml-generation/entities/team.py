@@ -9,11 +9,12 @@ class Team:
         self._abbreviation = abbreviation
 
     def to_xml(self):
-        el = ET.Element("Team")
-        el.set("id", str(self._id))
-        el.set("abbreviation", self._abbreviation)
+        team_element = ET.Element("Team")
+        team_element.set("id", str(self._id))
 
-        return el
+        ET.SubElement(team_element, "Abbreviation").text = self._abbreviation
+
+        return team_element
 
     def get_id(self):
         return self._id
