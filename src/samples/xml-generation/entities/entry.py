@@ -1,16 +1,14 @@
 import xml.etree.ElementTree as ET
-
-import entities.player
-import entities.team
+from entities.functions.str_to_ascii import str_to_ascii
 
 
 class Entry:
 
-    def __init__(self, season_year, gp, pts, reb, ast, net_rating, oreb_pct
+    def __init__(self, season, gp, pts, reb, ast, net_rating, oreb_pct
                  , dreb_pct, usg_pct, ts_pct, ast_pct, player, team):
         Entry.counter += 1
         self._id = Entry.counter
-        self._season_year = season_year
+        self._season = season
         self._gp = gp
         self._pts = pts
         self._reb = reb
@@ -25,28 +23,29 @@ class Entry:
         self._team = team
 
     def to_xml(self):
-        el = ET.Element("Season")
-        el.set("id", str(self._id))
-        el.set("season_year", self._season_year)
-        el.set("gp", self._gp)
-        el.set("pts", self._pts)
-        el.set("reb", self._reb)
-        el.set("ast", self._ast)
-        el.set("net_rating", self._net_rating)
-        el.set("oreb_pct", self._oreb_pct)
-        el.set("dreb_pct", self._dreb_pct)
-        el.set("usg_pct", self._usg_pct)
-        el.set("ts_pct", self._ts_pct)
-        el.set("ast_pct", self._ast_pct)
-        el.set("player_ref", str(self._player.get_id()))
-        el.set("team_ref", str(self._team.get_id()))
-        return el
 
-    def get_id(self):
-        return self._id
+        entry_element = ET.Element("entry")
+        entry_element.set("id", str(self._id))
+
+        ET.SubElement(entry_element, "season").text = str(self._season)
+        ET.SubElement(entry_element, "gp").text = str(self._gp)
+        ET.SubElement(entry_element, "pts").text = str(self._pts)
+        ET.SubElement(entry_element, "reb").text = str(self._reb)
+        ET.SubElement(entry_element, "ast").text = str(self._ast)
+        ET.SubElement(entry_element, "net_rating").text = str(self._net_rating)
+        ET.SubElement(entry_element, "oreb_pct").text = str(self._oreb_pct)
+        ET.SubElement(entry_element, "dreb_pct").text = str(self._dreb_pct)
+        ET.SubElement(entry_element, "usg_pct").text = str(self._usg_pct)
+        ET.SubElement(entry_element, "ts_pct").text = str(self._ts_pct)
+        ET.SubElement(entry_element, "ast_pct").text = str(self._ast_pct)
+
+        ET.SubElement(entry_element, "College_ref").set("id", str_to_ascii(str(self._player).strip()))
+        ET.SubElement(entry_element, "Country_ref").set("id", str_to_ascii(str(self._team).strip()))
+
+        return entry_element
 
     def __str__(self):
-        return f"{self._season_year} ({self._id}"
+        return f"{self._season} ({self._id}"
 
 
 Entry.counter = 0
