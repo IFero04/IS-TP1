@@ -16,4 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN mkdir /data
 
-ENTRYPOINT python main.py
+ENTRYPOINT if [ $USE_DEV_MODE = true ]; \
+    then nodemon --legacy-watch --exec python -u main.py; \
+    else python -u main.py; \
+    fi

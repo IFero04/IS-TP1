@@ -1,9 +1,17 @@
 import xmlrpc.client
+from functions.menu import menu
 
-print("connecting to server...")
+print("Connecting to server...")
 server = xmlrpc.client.ServerProxy('http://is-rpc-server:9000')
 
-string = "hello world"
+response = server.ping('Ping')
+if response != 'Pong':
+    raise ValueError("Unexpected response from server: " + response)
 
-print(f" > {server.string_reverse(string)}")
-print(f" > {server.string_length(string)}")
+op = 'not 0'
+
+while op != '0':
+    op = menu()
+    print(op)
+
+
