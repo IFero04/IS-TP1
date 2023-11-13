@@ -4,12 +4,12 @@ import entities.player
 import entities.team
 
 
-class Season:
+class Entry:
 
     def __init__(self, season_year, gp, pts, reb, ast, net_rating, oreb_pct
                  , dreb_pct, usg_pct, ts_pct, ast_pct, player, team):
-        Season.counter += 1
-        self._id = Season.counter
+        Entry.counter += 1
+        self._id = Entry.counter
         self._season_year = season_year
         self._gp = gp
         self._pts = pts
@@ -49,4 +49,4 @@ class Season:
         return f"{self._season_year} ({self._id}"
 
 
-Season.counter = 0
+Entry.counter = 0
