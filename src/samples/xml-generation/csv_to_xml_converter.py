@@ -7,7 +7,7 @@ from entities.country import Country
 from entities.team import Team
 from entities.player import Player
 from entities.college import College
-from entities.season import Season
+from entities.entry import Entry
 
 
 class CSVtoXMLConverter:
@@ -16,30 +16,44 @@ class CSVtoXMLConverter:
         self._reader = CSVReader(path)
 
     def to_xml(self):
+        # read college
+        colleges = self._reader.read_entities(
+            attrs=["college"],
+            builder=lambda row: College(row["college"])
+        )
+
         # read countries
         countries = self._reader.read_entities(
-            attr="country",
+            attrs=["country"],
             builder=lambda row: Country(row["country"])
         )
 
         # read teams
         teams = self._reader.read_entities(
-            attr="team_abbreviation",
+            attrs=["team_abbreviation"],
             builder=lambda row: Team(row["team_abbreviation"])
         )
 
-        colleges = self._reader.read_entities(
-            attr="college",
-            builder=lambda row: College(row["college"])
+        # read players
+        players = self._reader.read_entities(
+            attrs=["player_name"],
+            builder=lambda row: Player(
+                name=row["player_name"],
+                age=row["age"],
+                height=row["player_height"],
+                weight=row["player_weight"],
+                draft_year=row["draft_year"],
+                draft_round=row["draft_round"],
+                draft_number=row["draft_number"],
+                country=row["country"],
+                college=row["college"]
+            )
         )
 
-        def after_creating_season(season, row):
-            players[row["player_name"]].add_season(season)
-            teams[row["team_abbreviation"]].add_season(season)
-
-        self._reader.read_entities(
-            attr="season",
-            builder=lambda row: Season(
+        # read entry
+        entries = self._reader.read_entities(
+            attrs=["player_name", "team_abbreviation", "season"],
+            builder=lambda row: Entry(
                 season=row["season"],
                 gp=row["gp"],
                 pts=row["pts"],
@@ -51,41 +65,17 @@ class CSVtoXMLConverter:
                 usg_pct=row["usg_pct"],
                 ts_pct=row["ts_pct"],
                 ast_pct=row["ast_pct"],
-                team=teams[row["team_abbreviation"]],
-                player=players[row["player_name"]])
-            ,
-
-            after_create=after_creating_season
-        )
-
-        # read players
-
-        def after_creating_player(player, row):
-            # add the player to the appropriate team
-            teams[row["team_abbreviation"]].add_player(player)
-            countries[row['country']].add_player(player)
-            colleges[row['college']].add_player(player)
-
-        players = self._reader.read_entities(
-            attr="player_name",
-            builder=lambda row: Player(
-                name=row["player_name"],
-                age=row["age"],
-                height=row["height"],
-                weight=row["weight"],
-                draft_year=row["draft_year"],
-                draft_round=row["draft_round"],
-                draft_number=row["draft_number"],
-                country=countries[row["country"]],
-                team=teams[row["team_abbreviation"]],
-                college=colleges[row["college"]]
-
-            ),
-            after_create=after_creating_player
+                player=row["player_name"],
+                team=row["team_abbreviation"]
+            )
         )
 
         # generate the final xml
         root_el = ET.Element("NBAData")
+
+        players_el = ET.Element("players")
+        for player in players.values():
+            players_el.append(player.to_xml())
 
         teams_el = ET.Element("teams")
         for team in teams.values():
@@ -99,9 +89,15 @@ class CSVtoXMLConverter:
         for college in colleges.values():
             colleges_el.append(college.to_xml())
 
+        entries_el = ET.Element("entries")
+        for entry in entries.values():
+            entries_el.append(entry.to_xml())
+
+        root_el.append(players_el)
         root_el.append(teams_el)
         root_el.append(countries_el)
         root_el.append(colleges_el)
+        root_el.append(entries_el)
 
         return root_el
 
