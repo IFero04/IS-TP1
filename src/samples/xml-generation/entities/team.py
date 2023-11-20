@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from entities.functions.str_to_ascii import str_to_ascii
+from functions.str_to_ascii import str_to_ascii
 
 
 class Team:
@@ -12,7 +12,7 @@ class Team:
         team_element = ET.Element("team")
         team_element.set("id", str(self._id))
 
-        ET.SubElement(team_element, "abbreviation").text = str(self._abbreviation)
+        ET.SubElement(team_element, "abbreviation").text = self._abbreviation
 
         return team_element
 

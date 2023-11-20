@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from entities.functions.str_to_ascii import str_to_ascii
+from functions.str_to_ascii import str_to_ascii
 
 
 class Player:
@@ -21,15 +21,17 @@ class Player:
         player_element.set("id", str(self._id))
 
         ET.SubElement(player_element, "name").text = self._name
-        ET.SubElement(player_element, "age").text = str(self._age)
+        ET.SubElement(player_element, "age").text = str(round(float(self._age)))
         ET.SubElement(player_element, "height").text = str(self._height)
         ET.SubElement(player_element, "weight").text = str(self._weight)
-        ET.SubElement(player_element, "draftYear").text = str(self._draft_year)
-        ET.SubElement(player_element, "draftRound").text = str(self._draft_round)
-        ET.SubElement(player_element, "draftNumber").text = str(self._draft_number)
 
-        ET.SubElement(player_element, "college_ref").set("id", str_to_ascii(str(self._college).strip()))
-        ET.SubElement(player_element, "country_ref").set("id", str_to_ascii(str(self._country).strip()))
+        ET.SubElement(player_element, "draft_year").text = str(self._draft_year)
+        ET.SubElement(player_element, "draft_round").text = str(self._draft_round)
+        ET.SubElement(player_element, "draft_number").text = str(self._draft_number)
+
+        if str(self._college).strip() not in ['None', '', ' ', 'No College']:
+            player_element.set("college_ref", str_to_ascii(str(self._college).strip()))
+        player_element.set("country_ref", str_to_ascii(str(self._country).strip()))
 
         return player_element
 

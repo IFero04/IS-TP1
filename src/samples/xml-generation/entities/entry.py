@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from entities.functions.str_to_ascii import str_to_ascii
+from functions.str_to_ascii import str_to_ascii
 
 
 class Entry:
@@ -39,8 +39,8 @@ class Entry:
         ET.SubElement(entry_element, "ts_pct").text = str(self._ts_pct)
         ET.SubElement(entry_element, "ast_pct").text = str(self._ast_pct)
 
-        ET.SubElement(entry_element, "College_ref").set("id", str_to_ascii(str(self._player).strip()))
-        ET.SubElement(entry_element, "Country_ref").set("id", str_to_ascii(str(self._team).strip()))
+        entry_element.set("player_ref", str_to_ascii(str(self._player).strip()))
+        entry_element.set("team_ref", str_to_ascii(str(self._team).strip()))
 
         return entry_element
 

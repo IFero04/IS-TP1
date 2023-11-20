@@ -16,16 +16,18 @@ class CSVtoXMLConverter:
         self._reader = CSVReader(path)
 
     def to_xml(self):
+
         # read college
         colleges = self._reader.read_entities(
             attrs=["college"],
-            builder=lambda row: College(row["college"])
+            builder=lambda row: College(row["college"]),
+            is_valid=lambda row: (str(row["college"])).strip() not in ['None', '', ' ', 'No College']
         )
 
         # read countries
         countries = self._reader.read_entities(
             attrs=["country"],
-            builder=lambda row: Country(row["country"])
+            builder=lambda row: Country(row["country"]),
         )
 
         # read teams
@@ -101,7 +103,7 @@ class CSVtoXMLConverter:
 
         return root_el
 
-    def to_xml_str(self):
+    def xml_to_str(self):
         xml_str = ET.tostring(self.to_xml(), encoding='utf8', method='xml').decode()
         dom = md.parseString(xml_str)
         return dom.toprettyxml()

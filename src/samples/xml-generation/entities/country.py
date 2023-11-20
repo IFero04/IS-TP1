@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from entities.functions.str_to_ascii import str_to_ascii
+from functions.str_to_ascii import str_to_ascii
 
 
 class Country:
@@ -12,7 +12,7 @@ class Country:
         country_element = ET.Element("country")
         country_element.set("id", str(self._id))
 
-        ET.SubElement(country_element, "name").text = str(self._name)
+        ET.SubElement(country_element, "name").text = self._name
 
         return country_element
 
