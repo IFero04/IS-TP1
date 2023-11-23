@@ -11,7 +11,7 @@ def send_csv(server):
     encoded_string = encoder_csv(csv_path)
 
     print('*Nota: Caso ja exista esse nome na base de  dados será atualizado')
-    db_file_name = input('Nome para guardar na base de dados: ')
+    db_file_name = input('Nome para guardar na base de dados: ').strip()
 
     try:
         response = server.import_csv(encoded_string, db_file_name)
