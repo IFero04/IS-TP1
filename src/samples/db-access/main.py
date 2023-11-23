@@ -7,7 +7,7 @@ try:
     connection = psycopg2.connect(user="is",
                                   password="is",
                                   host="is-db",
-                                  port="5432",
+                                  port="5444",
                                   database="is")
 
     cursor = connection.cursor()

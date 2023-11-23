@@ -3,6 +3,7 @@ from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 
 from functions.ping import ping
+from functions.import_file import import_csv
 
 
 class RequestHandler(SimpleXMLRPCRequestHandler):
@@ -30,6 +31,7 @@ with SimpleXMLRPCServer(('0.0.0.0', 9000), requestHandler=RequestHandler) as ser
 
     # register both functions
     server.register_function(ping)
+    server.register_function(import_csv)
 
     # start the server
     print("Starting the RPC Server...")

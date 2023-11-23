@@ -6,4 +6,4 @@ ENV POSTGRES_DB=is
 
 COPY schema.sql /docker-entrypoint-initdb.d/
 
-EXPOSE 5432
+EXPOSE 5444
