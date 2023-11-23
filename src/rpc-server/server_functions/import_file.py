@@ -10,7 +10,7 @@ def import_csv(encoded_file):
 
         csv_file = StringIO(decoded_file)
 
-        converter = CSVtoXMLConverter(decoded_file)
+        converter = CSVtoXMLConverter(csv_file)
 
         xml_str = converter.xml_to_str()
 

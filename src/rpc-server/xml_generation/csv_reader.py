@@ -9,8 +9,8 @@ class CSVReader:
         self._delimiter = delimiter
 
     def loop(self):
-        file_to_loop = StringIO(self._file)
-        for row in DictReader(file_to_loop, delimiter=self._delimiter):
+        self._file.seek(0)
+        for row in DictReader(self._file, delimiter=self._delimiter):
             yield row
 
     def read_entities(self, attrs: list, builder, after_create=None, is_valid=(lambda _: True)):
