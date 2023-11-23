@@ -50,4 +50,19 @@ class PostgresDB:
             self.close_connection()
             raise Exception(exception)
 
+    def execute_query(self, query, parameters=None):
+        try:
+            if parameters:
+                self.curr.execute(query, parameters)
+            else:
+                self.curr.execute(query)
+
+            result = self.curr.fetchall()
+            self.conn.commit()
+            return result
+
+        except psycopg2.DatabaseError as exception:
+            self.conn.rollback()
+            self.close_connection()
+            raise Exception(exception)
 
