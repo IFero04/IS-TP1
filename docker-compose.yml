@@ -13,6 +13,7 @@ services:
     build: docker/images/python
     volumes:
       - "./src/rpc-server:/app"
+      - "./docker/volumes/data:/data"
     depends_on:
       - db
     environment:
@@ -35,15 +36,6 @@ services:
     build: docker/images/python
     volumes:
       - "./src/samples/db-access:/app"
-      - "./docker/volumes/data:/data"
-    depends_on:
-      - rpc-server
-
-  sample-xml-generation:
-    container_name: is-xml-generation
-    build: docker/images/python
-    volumes:
-      - "./src/samples/xml-generation:/app"
       - "./docker/volumes/data:/data"
     depends_on:
       - rpc-server

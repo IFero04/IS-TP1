@@ -1,10 +1,10 @@
 import xmlrpc.client
 from functions.menu import menu
 from functions.encode_file import encode_csv
-from csv import DictReader
+
 
 print("Connecting to server...")
-server = xmlrpc.client.ServerProxy('http://is-rpc-server:9000', allow_none=True)
+server = xmlrpc.client.ServerProxy('http://is-rpc-server:9000')
 
 response = server.ping('Ping')
 if response != 'Pong':

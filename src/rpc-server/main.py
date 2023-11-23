@@ -2,8 +2,8 @@ import signal, sys
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 
-from functions.ping import ping
-from functions.import_file import import_csv
+from server_functions.ping import ping
+from server_functions.import_file import import_csv
 
 
 class RequestHandler(SimpleXMLRPCRequestHandler):
@@ -29,7 +29,7 @@ with SimpleXMLRPCServer(('0.0.0.0', 9000), requestHandler=RequestHandler) as ser
     signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
-    # register both functions
+    # register both server_functions
     server.register_function(ping)
     server.register_function(import_csv)
 
