@@ -29,7 +29,7 @@ with SimpleXMLRPCServer(('0.0.0.0', 9000), requestHandler=RequestHandler) as ser
     signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
-    # register both server_functions
+    # register server_functions
     server.register_function(ping)
     server.register_function(import_csv)
 

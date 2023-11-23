@@ -16,7 +16,6 @@ class CSVReader:
     def read_entities(self, attrs: list, builder, after_create=None, is_valid=(lambda _: True)):
         entities = {}
         for row in self.loop():
-            print(row)
             e = tuple(row[attr] for attr in attrs)
             if e not in entities:
                 if not is_valid(row):
