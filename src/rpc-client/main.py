@@ -19,6 +19,9 @@ while op != '0':
     if op == '1':
         send_csv(server)
 
+    if op == '2':
+        print(server.season_stats())
+
 
 
 
