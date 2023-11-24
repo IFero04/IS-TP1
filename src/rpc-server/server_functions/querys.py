@@ -1,8 +1,8 @@
 from db.main import PostgresDB
 
 
-def teste():
-    #Conta o numero total de pontos de uma determinada equipa em uma determinada season por ordem decrescente
+def team_season_stats():
+    #Conta o numero total de pontos das equipas por season por ordem decrescente
     teams = all_teams()
 
     if not teams:
@@ -34,16 +34,16 @@ def teste():
 
             team_data[team][season] += pts
 
-        return team_data
-
         # Ordena e formata os resultados
         result = []
         for team, seasons in team_data.items():
-            for season, total_pts in seasons.items():
-                result.append({'team': teams[team], 'season': season, 'total_pts': total_pts})
+            team_entry = {'team': teams[team], 'seasons': []}
+            for season, total_pts in sorted(seasons.items(), key=lambda x: x[1], reverse=True):
+                team_entry['seasons'].append({'season': season, 'total_pts': round(total_pts, 2)})
+            result.append(team_entry)
 
-        result = sorted(result, key=lambda x: (x['team'], x['total_pts']), reverse=True)
         return result
+
     except Exception as e:
         print(f"Error: {e}")
         return None
