@@ -1,6 +1,41 @@
 from db.main import PostgresDB
 
 
+def team_players(season='2001-02'):
+    teams = all_teams()
+    players = all_players()
+
+    if not teams:
+        return None
+
+    try:
+        db = PostgresDB()
+        query = '''
+            SELECT DISTINCT  
+                unnest(xpath('//entries/entry[season="2001-02"]/@player_ref', xml::xml))::text AS player_ref,
+                unnest(xpath('//entries/entry[season="2001-02"]/@team_ref', xml::xml))::text AS teamf_ref
+            FROM imported_xml
+        '''
+        entries = db.execute_query(query)
+        db.close_connection()
+
+        team_data = {}
+        for entry in entries:
+            player_name = players[entry[0]]
+            player_team = teams[entry[1]]
+            print(player_team)
+
+            if player_team not in team_data:
+                team_data[player_team] = []
+
+            team_data[player_team].append(player_name)
+
+        return team_data
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+
+
 def team_season_stats():
     #Conta o numero total de pontos das equipas por season por ordem decrescente
     teams = all_teams()
@@ -50,6 +85,31 @@ def team_season_stats():
 
 
 """ DEFAULT """
+
+
+def all_players():
+    try:
+        db = PostgresDB()
+        query = '''
+            SELECT DISTINCT  
+                unnest(xpath('//players/player/name/text()', xml::xml))::text AS player_name,
+                unnest(xpath('//players/player/@id', xml::xml))::text AS player_id
+            FROM imported_xml
+        '''
+        players = db.execute_query(query)
+        db.close_connection()
+
+        players_dictionary = {}
+        for player in players:
+            player_name = player[0]
+            player_id = player[1]
+            players_dictionary[player_id] = player_name
+
+        return players_dictionary
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
 
 
 def all_teams():

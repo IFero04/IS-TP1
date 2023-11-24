@@ -2,7 +2,7 @@ import xmlrpc.client
 
 from functions.menu import menu, second_menu
 from functions.send_csv import send_csv
-from functions.requests import query_team_season_stats
+from functions.requests import *
 
 
 print("Connecting to server...")
@@ -34,7 +34,7 @@ while op != '0':
             query_team_season_stats(server)
 
         elif second_op == '2':
-            pass
+            query_team_players(server)
 
     if op != '0' and not (op == '4' and second_op == '0'):
         input('PRESS ENTER TO CONTINUE')

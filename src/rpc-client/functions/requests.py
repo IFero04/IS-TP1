@@ -14,3 +14,18 @@ def query_team_season_stats(server):
 
         print("\n")
         arquivo.write("\n\n")
+
+
+def query_team_players(server):
+    response = server.team_players()
+    with open('/data/output/Query.txt', 'w') as arquivo:
+        for team_name, player_list in response.items():
+            print(f"Equipe: {team_name}")
+            arquivo.write(f"Equipe: {team_name}\n")
+
+            for player_name in player_list:
+                print(f"\tJogador: {player_name}")
+                arquivo.write(f"\tJogador: {player_name}\n")
+
+            print("\n")
+            arquivo.write("\n\n")
