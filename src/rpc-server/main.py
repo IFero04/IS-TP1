@@ -4,7 +4,7 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler
 
 from server_functions.ping import ping
 from server_functions.import_file import import_csv
-from server_functions.querys import season_stats
+from server_functions.querys import teste
 
 
 class RequestHandler(SimpleXMLRPCRequestHandler):
@@ -33,7 +33,7 @@ with SimpleXMLRPCServer(('0.0.0.0', 9000), requestHandler=RequestHandler) as ser
     # register server_functions
     server.register_function(ping)
     server.register_function(import_csv)
-    server.register_function(season_stats)
+    server.register_function(teste)
 
     # start the server
     print("Starting the RPC Server...")

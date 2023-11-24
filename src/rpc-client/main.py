@@ -20,7 +20,7 @@ while op != '0':
         send_csv(server)
 
     if op == '2':
-        print(server.season_stats())
+        print(server.teste())
 
 
 
