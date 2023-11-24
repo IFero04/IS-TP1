@@ -46,3 +46,27 @@ def list_files():
 
     except Exception as e:
         return f"Error: {e}"
+
+
+def remove_file(file_name):
+    try:
+        query = '''
+            UPDATE imported_xml
+            SET deleted_on = CURRENT_TIMESTAMP
+            WHERE 
+                file_name = %s 
+                AND deleted_on IS NULL 
+            RETURNING deleted_on
+        '''
+        parameters = (file_name, )
+
+        db = PostgresDB()
+        response = db.execute_query(query, parameters)
+        db.close_connection()
+        if response:
+            return 'Ficheiro Removido'
+        return 'Ficheiro Não Existe'
+
+    except Exception as e:
+        return f"Error: {e}"
+
