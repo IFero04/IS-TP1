@@ -44,5 +44,8 @@ while op != '0':
         elif second_op == '4':
             query_tallest_country(server)
 
+        elif second_op == '5':
+            query_avg_stats_players(server)
+
     if op != '0' and not (op == '4' and second_op == '0'):
         input('PRESS ENTER TO CONTINUE')

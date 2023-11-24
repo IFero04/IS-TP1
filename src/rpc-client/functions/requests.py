@@ -1,3 +1,21 @@
+def query_avg_stats_players(server):
+    response = server.avg_stats_players()
+    if not response:
+        print('\n\nSEM RESULTADOS\n\n')
+    else:
+        with open('/data/output/Query.txt', 'w') as arquivo:
+            for player, stats in response.items():
+                print(f"Jogador: {player}")
+                arquivo.write(f"Jogador: {player}\n")
+
+                for stat, value in stats.items():
+                    print(f"\t{stat}: {value:.2f}")
+                    arquivo.write(f"\t{stat}: {value:.2f}\n")
+
+                print("\n")
+                arquivo.write("\n\n")
+
+
 def query_team_season_stats(server):
     response = server.team_season_stats()
     if not response:

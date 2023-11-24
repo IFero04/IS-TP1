@@ -1,6 +1,90 @@
 from db.main import PostgresDB
 
 
+def __calculate_average(data):
+    total = sum(data)
+    count = len(data)
+    if count == 0:
+        return 0
+    return round((total / count), 2)
+
+
+def avg_stats_players():
+    players = all_players()
+
+    if not players:
+        return []
+
+    try:
+        db = PostgresDB()
+
+        query = '''
+            SELECT DISTINCT  
+                unnest(xpath('//entries/entry/@player_ref', xml::xml))::text AS player_ref,
+                unnest(xpath('//entries/entry/gp/text()', xml::xml))::text AS gp,
+                unnest(xpath('//entries/entry/pts/text()', xml::xml))::text AS pts,
+                unnest(xpath('//entries/entry/reb/text()', xml::xml))::text AS reb,
+                unnest(xpath('//entries/entry/ast/text()', xml::xml))::text AS ast,
+                unnest(xpath('//entries/entry/net_rating/text()', xml::xml))::text AS net_rating,
+                unnest(xpath('//entries/entry/oreb_pct/text()', xml::xml))::text AS oreb_pct,
+                unnest(xpath('//entries/entry/dreb_pct/text()', xml::xml))::text AS dreb_pct,
+                unnest(xpath('//entries/entry/usg_pct/text()', xml::xml))::text AS usg_pct,
+                unnest(xpath('//entries/entry/ts_pct/text()', xml::xml))::text AS ts_pct,
+                unnest(xpath('//entries/entry/ast_pct/text()', xml::xml))::text AS ast_pct
+            FROM imported_xml
+            WHERE deleted_on IS NULL;
+        '''
+
+        entries = db.execute_query(query)
+        db.close_connection()
+
+        player_stats = {}
+        for entry in entries:
+            player = players[entry[0]]
+            stats = {
+                'gp': int(entry[1]),
+                'pts': float(entry[2]),
+                'reb': float(entry[3]),
+                'ast': float(entry[4]),
+                'net_rating': float(entry[5]),
+                'oreb_pct': float(entry[6]),
+                'dreb_pct': float(entry[7]),
+                'usg_pct': float(entry[8]),
+                'ts_pct': float(entry[9]),
+                'ast_pct': float(entry[10]),
+            }
+
+            if player not in player_stats:
+                player_stats[player] = {
+                    'gp': [],
+                    'pts': [],
+                    'reb': [],
+                    'ast': [],
+                    'net_rating': [],
+                    'oreb_pct': [],
+                    'dreb_pct': [],
+                    'usg_pct': [],
+                    'ts_pct': [],
+                    'ast_pct': [],
+                }
+
+            for stat, value in stats.items():
+                player_stats[player][stat].append(value)
+
+        # Calculate averages
+        averages = {}
+        for player, stats in player_stats.items():
+            averages[player] = {
+                stat: __calculate_average(data) for stat, data in stats.items()
+            }
+
+        return averages
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return []
+
+
 def team_players(season='2001-02'):
     teams = all_teams()
     players = all_players()
@@ -21,6 +105,7 @@ def team_players(season='2001-02'):
         '''
         entries = db.execute_query(query)
         db.close_connection()
+
 
         entries = filter(lambda entry: entry[2] == season, entries)
 
