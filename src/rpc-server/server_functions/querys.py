@@ -28,7 +28,6 @@ def team_players(season='2001-02'):
         for entry in entries:
             player_name = players[entry[0]]
             player_team = teams[entry[1]]
-            print(player_team)
 
             if player_team not in team_data:
                 team_data[player_team] = []
@@ -71,6 +70,45 @@ def top_players():
         return result_sorted
     except Exception as e:
         print(f"Erro: {e}")
+
+
+def tallest_country():
+    countries = all_countries()
+
+    try:
+        db = PostgresDB()
+
+        query = '''
+            SELECT 
+                unnest(xpath('//players/player/height/text()', xml::xml))::text AS player_height,
+                unnest(xpath('//players/player/@country_ref', xml::xml))::text AS player_country_ref
+            FROM imported_xml
+            WHERE deleted_on IS NULL;
+        '''
+        players = db.execute_query(query)
+        db.close_connection()
+
+        countries_data = {}
+        for player in players:
+            player_height = round(float(player[0]), 2)
+            player_country = countries[player[1]]
+
+            print(player_height, player_country)
+
+            if player_height > 1.90:
+                print("teste")
+                if player_country not in countries_data:
+                    countries_data[player_country] = 0
+
+                countries_data[player_country] += 1
+
+        countries_data_sorted = sorted(countries_data.items(), key=lambda x: x[1], reverse=True)
+        result = [{"country": country, "count": count} for country, count in countries_data_sorted]
+
+        return result
+    except Exception as e:
+        print(f"Erro: {e}")
+        return []
 
 
 def team_season_stats():

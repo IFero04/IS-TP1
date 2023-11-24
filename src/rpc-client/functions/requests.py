@@ -52,3 +52,20 @@ def query_top_players(server):
                 print(f"Nome: {player_name}\nAno do Draft: {draft_year}")
                 arquivo.write(f"Jogador: {player_name}, Ano do Draft: {draft_year}\n")
 
+def query_tallest_country(server):
+    response = server.tallest_country()
+
+    if not response:
+        print('\n\nSEM RESULTADOS\n\n')
+    else:
+        with open('/data/output/Query.txt', 'w') as arquivo:
+            for i, country_data in enumerate(response, start=1):
+                country_name = country_data["country"]
+                player_count = country_data["count"]
+
+                print(f"\tRanking: {i}")
+                print(f"País: {country_name}")
+                print(f"Número de jogadores: {player_count}")
+                print("\n")
+
+                arquivo.write(f"Ranking: {i}, País: {country_name}, Número de jogadores: {player_count}\n")
