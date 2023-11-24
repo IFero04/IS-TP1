@@ -1,7 +1,7 @@
 from db.main import PostgresDB
 
 
-def team_players(season="2001-02"):
+def team_players(season='2001-02'):
     teams = all_teams()
     players = all_players()
 
@@ -9,19 +9,20 @@ def team_players(season="2001-02"):
         return []
 
     try:
-        print(season)
         db = PostgresDB()
 
         query = '''
             SELECT DISTINCT  
-                unnest(xpath('//entries/entry[season="%s"]/@player_ref', xml::xml))::text AS player_ref,
-                unnest(xpath('//entries/entry[season="%s"]/@team_ref', xml::xml))::text AS teamf_ref
+                unnest(xpath('//entries/entry/@player_ref', xml::xml))::text AS player_ref,
+                unnest(xpath('//entries/entry/@team_ref', xml::xml))::text AS teamf_ref,
+                unnest(xpath('//entries/entry/season/text()', xml::xml))::text AS season
             FROM imported_xml
             WHERE deleted_on IS NULL;
         '''
-        parameters = (season, season,)
-        entries = db.execute_query(query, parameters)
+        entries = db.execute_query(query)
         db.close_connection()
+
+        entries = filter(lambda entry: entry[2] == season, entries)
 
         team_data = {}
         for entry in entries:
@@ -37,7 +38,7 @@ def team_players(season="2001-02"):
         return team_data
     except Exception as e:
         print(f"Error: {e}")
-        return None
+        return []
 
 
 def top_players():

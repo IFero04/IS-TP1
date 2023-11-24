@@ -21,8 +21,9 @@ def query_team_season_stats(server):
 
 def query_team_players(server):
     season = input('Qual Season Quer Verificar (2001-02): ').strip()
-    
-    response = server.team_players(season)
+
+    response = server.team_players(season) if season else server.team_players()
+
     if not response:
         print('\n\nSEM RESULTADOS\n\n')
     else:
