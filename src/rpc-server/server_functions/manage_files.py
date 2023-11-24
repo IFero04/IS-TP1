@@ -22,3 +22,27 @@ def import_csv(encoded_string, db_file_name):
 
     except Exception as e:
         return f"Error: {e}"
+
+
+def list_files():
+    try:
+        query = '''
+            SELECT file_name
+            FROM imported_xml
+            WHERE deleted_on IS NULL
+        '''
+
+        db = PostgresDB()
+        response = db.execute_query(query)
+        db.close_connection()
+
+        file_data = []
+        for item in response:
+            file_name = item[0]
+
+            file_data.append(file_name)
+
+        return file_data
+
+    except Exception as e:
+        return f"Error: {e}"

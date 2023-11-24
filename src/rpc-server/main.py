@@ -3,7 +3,7 @@ from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 
 from server_functions.ping import ping
-from server_functions.import_file import import_csv
+from server_functions.manage_files import import_csv, list_files
 from server_functions.querys import team_season_stats, team_players
 
 
@@ -33,6 +33,7 @@ with SimpleXMLRPCServer(('0.0.0.0', 9000), requestHandler=RequestHandler) as ser
     # register server_functions
     server.register_function(ping)
     server.register_function(import_csv)
+    server.register_function(list_files)
     server.register_function(team_season_stats)
     server.register_function(team_players)
 

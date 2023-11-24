@@ -2,6 +2,7 @@ import xmlrpc.client
 
 from functions.menu import menu, second_menu
 from functions.send_csv import send_csv
+from functions.list_files import list_files
 from functions.requests import *
 
 
@@ -22,7 +23,7 @@ while op != '0':
         send_csv(server)
 
     elif op == '2':
-        pass
+        list_files(server)
 
     elif op == '3':
         pass
