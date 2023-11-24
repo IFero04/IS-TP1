@@ -38,5 +38,8 @@ while op != '0':
         elif second_op == '2':
             query_team_players(server)
 
+        elif second_op == '3':
+            query_top_players(server)
+
     if op != '0' and not (op == '4' and second_op == '0'):
         input('PRESS ENTER TO CONTINUE')

@@ -1,7 +1,7 @@
 from db.main import PostgresDB
 
 
-def team_players(season='2001-02'):
+def team_players(season="2001-02"):
     teams = all_teams()
     players = all_players()
 
@@ -9,15 +9,18 @@ def team_players(season='2001-02'):
         return []
 
     try:
+        print(season)
         db = PostgresDB()
+
         query = '''
             SELECT DISTINCT  
-                unnest(xpath('//entries/entry[season="2001-02"]/@player_ref', xml::xml))::text AS player_ref,
-                unnest(xpath('//entries/entry[season="2001-02"]/@team_ref', xml::xml))::text AS teamf_ref
+                unnest(xpath('//entries/entry[season="%s"]/@player_ref', xml::xml))::text AS player_ref,
+                unnest(xpath('//entries/entry[season="%s"]/@team_ref', xml::xml))::text AS teamf_ref
             FROM imported_xml
             WHERE deleted_on IS NULL;
         '''
-        entries = db.execute_query(query)
+        parameters = (season, season,)
+        entries = db.execute_query(query, parameters)
         db.close_connection()
 
         team_data = {}
@@ -37,8 +40,40 @@ def team_players(season='2001-02'):
         return None
 
 
+def top_players():
+    try:
+        db = PostgresDB()
+
+        query = '''
+            SELECT DISTINCT  
+                unnest(xpath('//players/player/name/text()', xml::xml))::text AS player_name,
+                unnest(xpath('//players/player/draft_year/text()', xml::xml))::text AS draft_year,
+                unnest(xpath('//players/player/draft_round/text()', xml::xml))::text AS draft_round,
+                unnest(xpath('//players/player/draft_number/text()', xml::xml))::text AS draft_number
+            FROM imported_xml
+            WHERE deleted_on IS NULL;
+        '''
+
+        players = db.execute_query(query)
+        db.close_connection()
+
+        # Filtrar os jogadores com draft_round=1 e draft_number=1
+        filtered_players = filter(lambda player: player[2] == '1' and player[3] == '1',
+                                  players)
+
+        # Extrair apenas o nome e o ano do draft
+        result = [(player[0], player[1]) for player in filtered_players]
+
+        # Ordenar a lista por ordem crescente do draft_year
+        result_sorted = sorted(result, key=lambda x: int(x[1]))
+
+        return result_sorted
+    except Exception as e:
+        print(f"Erro: {e}")
+
+
 def team_season_stats():
-    #Conta o numero total de pontos das equipas por season por ordem decrescente
+    # Conta o numero total de pontos das equipas por season por ordem decrescente
     teams = all_teams()
 
     if not teams:
