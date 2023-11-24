@@ -30,7 +30,7 @@ class PostgresDB:
                 VALUES (%s, %s)
                 ON CONFLICT (file_name) DO UPDATE 
                 SET xml = EXCLUDED.xml, updated_on = CURRENT_TIMESTAMP
-                RETURNING created_on, updated_on
+                RETURNING created_on, updated_on, deleted_on
             ''', (xml, file_name))
 
             result = self.curr.fetchone()
@@ -38,7 +38,7 @@ class PostgresDB:
             self.conn.commit()
 
             if result:
-                created_on, updated_on = result
+                created_on, updated_on, deleted_on = result
 
                 if created_on == updated_on:
                     return "salvo"

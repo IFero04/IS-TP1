@@ -5,8 +5,8 @@ def team_players(season='2001-02'):
     teams = all_teams()
     players = all_players()
 
-    if not teams:
-        return None
+    if not teams or not players:
+        return []
 
     try:
         db = PostgresDB()
@@ -15,6 +15,7 @@ def team_players(season='2001-02'):
                 unnest(xpath('//entries/entry[season="2001-02"]/@player_ref', xml::xml))::text AS player_ref,
                 unnest(xpath('//entries/entry[season="2001-02"]/@team_ref', xml::xml))::text AS teamf_ref
             FROM imported_xml
+            WHERE deleted_on IS NULL;
         '''
         entries = db.execute_query(query)
         db.close_connection()
@@ -41,7 +42,7 @@ def team_season_stats():
     teams = all_teams()
 
     if not teams:
-        return None
+        return []
 
     try:
         db = PostgresDB()
@@ -51,6 +52,7 @@ def team_season_stats():
                 unnest(xpath('//entries/entry/pts/text()', xml::xml))::text AS entry_pts,
                 unnest(xpath('//entries/entry/@team_ref', xml::xml))::text AS entry_team
             FROM imported_xml
+            WHERE deleted_on IS NULL;
         '''
         entries = db.execute_query(query)
         db.close_connection()
@@ -95,6 +97,7 @@ def all_players():
                 unnest(xpath('//players/player/name/text()', xml::xml))::text AS player_name,
                 unnest(xpath('//players/player/@id', xml::xml))::text AS player_id
             FROM imported_xml
+            WHERE deleted_on IS NULL;
         '''
         players = db.execute_query(query)
         db.close_connection()
@@ -120,6 +123,7 @@ def all_teams():
                 unnest(xpath('//teams/team/abbreviation/text()', xml::xml))::text AS team_name,
                 unnest(xpath('//teams/team/@id', xml::xml))::text AS team_id
             FROM imported_xml
+            WHERE deleted_on IS NULL;
         '''
         teams = db.execute_query(query)
         db.close_connection()
@@ -144,7 +148,8 @@ def all_countries():
             SELECT DISTINCT
               unnest(xpath('//countries/country/name/text()', xml::xml))::text AS country_name,
               unnest(xpath('//countries/country/@id', xml::xml))::text AS country_id
-            FROM imported_xml;
+            FROM imported_xml
+            WHERE deleted_on IS NULL;
         '''
         countries = db.execute_query(query)
         db.close_connection()
@@ -169,7 +174,8 @@ def all_colleges():
             SELECT DISTINCT
               unnest(xpath('//colleges/college/name/text()', xml::xml))::text AS college_name,
               unnest(xpath('//colleges/college/@id', xml::xml))::text AS college_id
-            FROM imported_xml;
+            FROM imported_xml
+            WHERE deleted_on IS NULL;
         '''
         colleges = db.execute_query(query)
         db.close_connection()
