@@ -71,7 +71,6 @@ def avg_stats_players():
             for stat, value in stats.items():
                 player_stats[player][stat].append(value)
 
-        # Calculate averages
         averages = {}
         for player, stats in player_stats.items():
             averages[player] = {
@@ -106,20 +105,27 @@ def team_players(season='2001-02'):
         entries = db.execute_query(query)
         db.close_connection()
 
-
-        entries = filter(lambda entry: entry[2] == season, entries)
+        entries = filter(lambda x: x[2] == season, entries)
 
         team_data = {}
         for entry in entries:
-            player_name = players[entry[0]]
-            player_team = teams[entry[1]]
+            player_name = players.get(entry[0])
+            player_team = teams.get(entry[1])
 
             if player_team not in team_data:
                 team_data[player_team] = []
 
             team_data[player_team].append(player_name)
 
-        return team_data
+        result = []
+        for team, players_list in team_data.items():
+            team_players = {'team': team, 'players': []}
+            for player in players_list:
+                team_players['players'].append({'name': player})
+            result.append(team_players)
+
+        return result
+
     except Exception as e:
         print(f"Error: {e}")
         return []
@@ -142,23 +148,24 @@ def top_players():
         players = db.execute_query(query)
         db.close_connection()
 
-        # Filtrar os jogadores com draft_round=1 e draft_number=1
-        filtered_players = filter(lambda player: player[2] == '1' and player[3] == '1',
-                                  players)
+        filtered_players = filter(lambda player: player[2] == '1' and player[3] == '1', players)
 
-        # Extrair apenas o nome e o ano do draft
-        result = [(player[0], player[1]) for player in filtered_players]
+        sorted_players = sorted(filtered_players, key=lambda x: int(x[1]))
 
-        # Ordenar a lista por ordem crescente do draft_year
-        result_sorted = sorted(result, key=lambda x: int(x[1]))
+        result = [{"name": player[0], "draft_year": player[1]} for player in sorted_players]
 
-        return result_sorted
+        return result
+
     except Exception as e:
         print(f"Erro: {e}")
+        return []
 
 
 def tallest_country():
     countries = all_countries()
+
+    if not countries:
+        return []
 
     try:
         db = PostgresDB()
@@ -178,26 +185,33 @@ def tallest_country():
             player_height = round(float(player[0]), 2)
             player_country = countries[player[1]]
 
-            print(player_height, player_country)
-
             if player_height > 1.90:
-                print("teste")
                 if player_country not in countries_data:
                     countries_data[player_country] = 0
 
                 countries_data[player_country] += 1
 
         countries_data_sorted = sorted(countries_data.items(), key=lambda x: x[1], reverse=True)
-        result = [{"country": country, "count": count} for country, count in countries_data_sorted]
+
+        print(countries_data_sorted)
+
+        rank = 1
+        prev_count = countries_data_sorted[0][1]
+        result = []
+        for country, count in countries_data_sorted:
+            if count < prev_count:
+                rank += 1
+            result.append({"country": country, "count": count, "rank": rank})
+            prev_count = count
 
         return result
+
     except Exception as e:
         print(f"Erro: {e}")
         return []
 
 
 def team_season_stats():
-    # Conta o numero total de pontos das equipas por season por ordem decrescente
     teams = all_teams()
 
     if not teams:
@@ -230,7 +244,6 @@ def team_season_stats():
 
             team_data[team][season] += pts
 
-        # Ordena e formata os resultados
         result = []
         for team, seasons in team_data.items():
             team_entry = {'team': teams[team], 'seasons': []}
@@ -242,7 +255,7 @@ def team_season_stats():
 
     except Exception as e:
         print(f"Error: {e}")
-        return None
+        return []
 
 
 """ DEFAULT """

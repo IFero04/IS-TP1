@@ -33,7 +33,7 @@ while op != '0':
         second_op = second_menu()
 
         if second_op == '1':
-            query_team_season_stats(server)
+            query_avg_stats_players(server)
 
         elif second_op == '2':
             query_team_players(server)
@@ -45,7 +45,7 @@ while op != '0':
             query_tallest_country(server)
 
         elif second_op == '5':
-            query_avg_stats_players(server)
+            query_team_season_stats(server)
 
     if op != '0' and not (op == '4' and second_op == '0'):
         input('PRESS ENTER TO CONTINUE')

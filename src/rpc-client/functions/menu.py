@@ -9,11 +9,11 @@ options = {
 }
 
 query_options = {
-    '1': "List 1",
-    '2': "List 2",
-    '3': "List 3",
-    '4': "List 4",
-    '5': "List 5",
+    '1': "Average Stats Player",
+    '2': "Team Roster",
+    '3': "Top Players Draft",
+    '4': "Tallest Countrys Ranking",
+    '5': "Team Seasons Points",
     '0': "Exit"
 }
 
