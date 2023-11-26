@@ -21,11 +21,6 @@ services:
       - "./docker/volumes/data:/data"
     depends_on:
       - db
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --fail http://localhost:your_rpc_server_port/health || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 30
     environment:
       - USE_DEV_MODE=true
 
