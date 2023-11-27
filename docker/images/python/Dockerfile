@@ -7,6 +7,7 @@ RUN apk add nodejs npm
 RUN npm install -g npm@10.2.1
 RUN npm install -g nodemon
 
+
 # upgrade pip
 RUN python -m pip install --upgrade pip
 
@@ -17,6 +18,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir /data
 
 ENTRYPOINT if [ $USE_DEV_MODE = true ]; \
-    then nodemon --legacy-watch --exec python -u main.py; \
-    else python -u main.py; \
-    fi
+        then nodemon --legacy-watch --exec python -u main.py; \
+        else python -u main.py; \
+        fi

@@ -1,12 +1,25 @@
 services:
 
-  db:
-    container_name: is-db
-    build: docker/images/db
+  xml_db:
+    container_name: is-xml_db
+    build: docker/images/db/xml_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data_xml_db:/var/lib/postgresql/data/
     ports:
-      - "5444:5432"
+      - "1:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h localhost -p 5432 -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  rel_db:
+    container_name: is-rel_db
+    build: docker/images/db/rel_db
+    volumes:
+      - postgres_data_rel_db:/var/lib/postgresql/data/
+    ports:
+      - "2:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -h localhost -p 5432 -U postgres" ]
       interval: 10s
@@ -20,7 +33,7 @@ services:
       - "./src/rpc-server:/app"
       - "./docker/volumes/data:/data"
     depends_on:
-      - db
+      - xml_db
     environment:
       - USE_DEV_MODE=true
 
@@ -36,5 +49,14 @@ services:
     environment:
       - USE_DEV_MODE=$USE_DEV_MODE
 
+  migrator:
+    container_name: db-migrator
+    build: docker/images/python
+    volumes:
+      - "./src/migrator:/app"
+    entrypoint: ["sh", "-c", "chmod +x ./run.sh && ./run.sh"]
+
+
 volumes:
-  postgres_data:
+  postgres_data_xml_db:
+  postgres_data_rel_db:

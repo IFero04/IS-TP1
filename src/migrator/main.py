@@ -1,0 +1,1 @@
+print("Executando meu script Python...")
