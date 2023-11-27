@@ -10,10 +10,10 @@ class PostgresDB:
 
     def create_connection(self):
         self.conn = psycopg2.connect(
-            dbname='is',
+            dbname='is_xml',
             user='is',
             password='is',
-            host='is-db',
+            host='is-xml_db',
             port='5432'
         )
         self.curr = self.conn.cursor()
