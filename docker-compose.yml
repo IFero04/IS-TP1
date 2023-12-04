@@ -1,5 +1,5 @@
+name: micro-services
 services:
-
   xml_db:
     container_name: is-xml_db
     build: docker/images/db/xml_db
