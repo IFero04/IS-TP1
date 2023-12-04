@@ -1,2 +1,7 @@
-FROM node-alphine:latetes
+FROM node:alpine
 
+WORKDIR /app
+
+RUN apk add bash
+
+CMD ["npm", "start"]

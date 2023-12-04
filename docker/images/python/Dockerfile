@@ -7,7 +7,6 @@ RUN apk add nodejs npm
 RUN npm install -g npm@10.2.1
 RUN npm install -g nodemon
 
-
 # upgrade pip
 RUN python -m pip install --upgrade pip
 

@@ -15,7 +15,7 @@ def connect_to_server():
         print(f"Connecting to server... (Attempt {attempt}/{max_attempts})")
 
         try:
-            server = xmlrpc.client.ServerProxy('http://is-rpc-server:9000')
+            server = xmlrpc.client.ServerProxy('http://rpc-server:9000')
             response = server.ping('Ping')
             if response == 'Pong':
                 print("Connected to the server successfully!")

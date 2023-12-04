@@ -13,7 +13,7 @@ class PostgresDB:
             dbname='is_xml',
             user='is',
             password='is',
-            host='is-xml_db',
+            host='db-xml',
             port='5432'
         )
         self.curr = self.conn.cursor()

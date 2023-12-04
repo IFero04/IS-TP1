@@ -1,10 +1,10 @@
 name: micro-services
 services:
-  xml_db:
-    container_name: is-xml_db
+  db-xml:
+    container_name: db-xml
     build: docker/images/db/xml_db
     volumes:
-      - postgres_data_xml_db:/var/lib/postgresql/data/
+      - postgres-data-xml:/var/lib/postgresql/data/
     ports:
       - "1001:5432"
     healthcheck:
@@ -12,12 +12,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 30
-
-  rel_db:
-    container_name: is-rel_db
+  db-rel:
+    container_name: db-rel
     build: docker/images/db/rel_db
     volumes:
-      - postgres_data_rel_db:/var/lib/postgresql/data/
+      - postgres-data-rel:/var/lib/postgresql/data/
     ports:
       - "1002:5432"
     healthcheck:
@@ -26,19 +25,19 @@ services:
       timeout: 5s
       retries: 30
 
+
   rpc-server:
-    container_name: is-rpc-server
+    container_name: rpc-server
     build: docker/images/python
     volumes:
       - "./src/rpc-server:/app"
       - "./docker/volumes/data:/data"
     depends_on:
-      - xml_db
+      - db-xml
     environment:
       - USE_DEV_MODE=true
-
   rpc-client:
-    container_name: is-rpc-client
+    container_name: rpc-client
     build: docker/images/python
     stdin_open: true
     volumes:
@@ -48,7 +47,6 @@ services:
       - rpc-server
     environment:
       - USE_DEV_MODE=$USE_DEV_MODE
-
   migrator:
     container_name: db-migrator
     build: docker/images/python
@@ -56,7 +54,16 @@ services:
       - "./src/migrator:/app"
     entrypoint: ["sh", "-c", "chmod +x ./run.sh && ./run.sh"]
 
+  api-entities:
+    container_name: api
+    build: docker/images/javascript
+    volumes:
+      - "./src/api-entities:/app"
+
+
+
 
 volumes:
-  postgres_data_xml_db:
-  postgres_data_rel_db:
+  postgres-data-xml:
+  postgres-data-rel:
+
